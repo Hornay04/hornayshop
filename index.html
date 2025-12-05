@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hornay Shop - Packages</title>
+<style>
+/* =======================
+   NAVIGATION
+======================= */
+.nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    background: #f8f8f8;
+    margin-bottom: 10px;
+}
+.nav a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+.nav a.active {
+    color: #007bff;
+}
+
+/* =======================
+   CATEGORY TABS
+======================= */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+.tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #f0f0f0;
+}
+.tab.active {
+    background: #007bff;
+    color: white;
+}
+
+/* =======================
+   PRODUCT GRID
+======================= */
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 10px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card-top {
+    padding: 10px;
+}
+.card-bottom {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+}
+.card-bottom button {
+    padding: 6px 10px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* =======================
+   CATEGORY HEADER
+======================= */
+.category-title {
+    margin: 15px 0 5px 10px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* HIDE ALL CATEGORIES BY DEFAULT */
+.category {
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <h2>Hornay Shop</h2>
+    <p>Digital Packages • USD</p>
+</header>
+
+<!-- NAV -->
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="more.html">More</a>
+    <a href="checkout.html">Checkout</a>
+</nav>
+
+<!-- CATEGORY TABS -->
+<div class="tabs">
+    <button class="tab active" onclick="showCategory('internet', event)">Internet</button>
+    <button class="tab" onclick="showCategory('game', event)">Game</button>
+    <button class="tab" onclick="showCategory('voice', event)">Voice</button>
+    <button class="tab" onclick="showCategory('sms', event)">SMS</button>
+</div>
+
+<!-- INTERNET -->
+<div id="internet" class="category" style="display:block;">
+    <h3 class="category-title">Internet Packages</h3>
+    <div class="products">
+        <div class="card">
+            <div class="card-top">
+                <h4>Unlimited Daily</h4>
+                <p>24 Hours</p>
+            </div>
+            <div class="card-bottom">
+                <span>$1.00</span>
+                <button onclick="addToCart('internet1','Unlimited Daily',1.00)">&#8250;</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-top">
+                <h4>Unlimited Weekly</h4>
+                <p>7 Days</p>
+            </div>
+            <div class="card-bottom">
+                <span>$6.00</span>
+                <button onclick="addToCart('internet2','Unlimited Weekly',6.00)">&#8250;</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-top">
+                <h4>Social Media Pack</h4>
+                <p>Facebook, Instagram</p>
+            </div>
+            <div class="card-bottom">
+                <span>$3.00</span>
+                <button onclick="addToCart('internet3','Social Media Pack',3.00)">&#8250;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="category">
+    <h3 class="category-title">Game Packages</h3>
+    <div class="products">
+        <div class="card">
+            <div class="card-top">
+                <h4>Free Fire Diamonds</h4>
+                <p>100 Diamonds</p>
+            </div>
+            <div class="card-bottom">
+                <span>$2.00</span>
+                <button onclick="addToCart('game1','Free Fire Diamonds',2.00)">&#8250;</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-top">
+                <h4>ML Battle Points</h4>
+                <p>200 BP</p>
+            </div>
+            <div class="card-bottom">
+                <span>$3.50</span>
+                <button onclick="addToCart('game2','ML Battle Points',3.50)">&#8250;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VOICE -->
+<div id="voice" class="category">
+    <h3 class="category-title">Voice Packages</h3>
+    <div class="products">
+        <div class="card">
+            <div class="card-top">
+                <h4>Call 50 Min</h4>
+                <p>Local</p>
+            </div>
+            <div class="card-bottom">
+                <span>$1.50</span>
+                <button onclick="addToCart('voice1','Call 50 Min',1.50)">&#8250;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SMS -->
+<div id="sms" class="category">
+    <h3 class="category-title">SMS Packages</h3>
+    <div class="products">
+        <div class="card">
+            <div class="card-top">
+                <h4>100 SMS</h4>
+                <p>Local</p>
+            </div>
+            <div class="card-bottom">
+                <span>$0.80</span>
+                <button onclick="addToCart('sms1','100 SMS',0.80)">&#8250;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show category
+function showCategory(cat,event){
+    const categories=['internet','game','voice','sms'];
+    categories.forEach(c => document.getElementById(c).style.display=(c===cat)?'block':'none');
+
+    // Tab active styling
+    const tabs=document.querySelectorAll('.tab');
+    tabs.forEach(tab=>tab.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+// Add to cart
+function addToCart(id,title,price){
+    let cart=JSON.parse(localStorage.getItem('cart'))||[];
+    const existing=cart.find(item=>item.id===id);
+    if(existing) existing.qty+=1;
+    else cart.push({id,title,price,qty:1});
+    localStorage.setItem('cart',JSON.stringify(cart));
+    alert(title+' added to cart!');
+}
+</script>
+
+</body>
+</html>

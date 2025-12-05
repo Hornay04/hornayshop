@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hornay Shop - Checkout</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin:0; padding:20px;
+    background:#f0f2f5;
+    color:#333;
+}
+h2, h3 { margin:5px 0; }
+.card {
+    background:#fff;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+.card div { display:flex; justify-content: space-between; margin:5px 0; }
+.total { font-weight:bold; font-size:18px; margin-top:10px; }
+button {
+    padding:8px 16px; border:none;
+    background:#007bff; color:#fff;
+    border-radius:5px; cursor:pointer;
+    margin-top:8px;
+}
+button:hover { background:#0056b3; }
+input[type=file], input[type=text] {
+    margin-top:6px;
+    padding:6px;
+    width:100%;
+    box-sizing:border-box;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+.payment-section {
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<h2>Hornay Shop - Checkout</h2>
+
+<h3>Order Summary</h3>
+<div id="checkout"></div>
+
+<div class="payment-section">
+<h3>Payment Method</h3>
+<select id="paymentMethod" style="padding:8px; width:100%; margin-bottom:10px;">
+    <option value="mosan">Mosan</option>
+    <option value="tpay">T-Pay</option>
+    <option value="pulsa">Pulsa (74409120)</option>
+</select>
+
+<div id="paymentArea"></div>
+</div>
+
+<script>
+// Render checkout items
+function renderCheckout() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const checkoutDiv = document.getElementById('checkout');
+    if(!cart.length){
+        checkoutDiv.innerHTML = '<p>Your cart is empty.</p>';
+        return;
+    }
+
+    let total = 0;
+    let html = '';
+    cart.forEach(item=>{
+        const subtotal = item.price*item.qty;
+        total += subtotal;
+        html += `<div><span>${item.title} × ${item.qty}</span><span>$${subtotal.toFixed(2)}</span></div>`;
+    });
+    html += `<div class="total">Total: $${total.toFixed(2)}</div>`;
+    checkoutDiv.innerHTML = html;
+}
+renderCheckout();
+
+// Payment method
+const paymentMethod = document.getElementById('paymentMethod');
+const paymentArea = document.getElementById('paymentArea');
+
+function renderPayment(){
+    const method = paymentMethod.value;
+    if(method==='pulsa'){
+        paymentArea.innerHTML = `
+            <p>Pay via Pulsa to 74409120</p>
+            <p>Upload proof after payment:</p>
+            <input type="file" id="proofPulsa" accept="image/*"><br>
+            <button onclick="submitPayment()">Submit Payment</button>
+        `;
+    } else if(method==='mosan'){
+        paymentArea.innerHTML = `
+            <p>Scan QR to pay via Mosan</p>
+            <img src="mosan-qr.png" alt="Mosan QR" width="150"><br>
+            <p>Upload proof after payment:</p>
+            <input type="file" id="proofMosan" accept="image/*"><br>
+            <button onclick="submitPayment()">Submit Payment</button>
+        `;
+    } else if(method==='tpay'){
+        paymentArea.innerHTML = `
+            <p>Scan QR to pay via T-Pay</p>
+            <img src="tpay-qr.png" alt="T-Pay QR" width="150"><br>
+            <p>Upload proof after payment:</p>
+            <input type="file" id="proofTPay" accept="image/*"><br>
+            <button onclick="submitPayment()">Submit Payment</button>
+        `;
+    }
+}
+paymentMethod.addEventListener('change', renderPayment);
+renderPayment();
+
+// Submit payment
+function submitPayment(){
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if(!cart.length) return alert('Cart empty.');
+
+    let proofInput;
+    const method = paymentMethod.value;
+    if(method==='pulsa') proofInput=document.getElementById('proofPulsa');
+    if(method==='mosan') proofInput=document.getElementById('proofMosan');
+    if(method==='tpay') proofInput=document.getElementById('proofTPay');
+
+    let proofUrl='';
+    if(proofInput && proofInput.files[0]){
+        const reader=new FileReader();
+        reader.onload = function(e){
+            proofUrl=e.target.result;
+            saveOrder(proofUrl);
+        };
+        reader.readAsDataURL(proofInput.files[0]);
+    } else saveOrder(proofUrl);
+}
+
+function saveOrder(proofUrl){
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total=0;
+    const items = cart.map(item=>{ total+=item.price*item.qty; return {title:item.title, qty:item.qty, price:item.price}; });
+
+    const orders = JSON.parse(localStorage.getItem('orders'))||[];
+    const newOrder = {
+        id:'ORD'+Date.now(),
+        items,
+        total,
+        paymentMethod: paymentMethod.value,
+        proofUrl,
+        status:'pending'
+    };
+    orders.push(newOrder);
+    localStorage.setItem('orders', JSON.stringify(orders));
+
+    alert('Order submitted! Admin can now view it.');
+    localStorage.removeItem('cart');
+    location.reload();
+}
+</script>
+
+</body>
+</html>

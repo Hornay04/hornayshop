@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hornay Shop - Admin Dashboard</title>
+<style>
+body { font-family: Arial,sans-serif; background:#f0f2f5; margin:0; padding:20px; color:#333; }
+h2 { margin-bottom:15px; }
+.card { background:#fff; padding:15px; border-radius:10px; margin-bottom:15px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+.card div { display:flex; justify-content:space-between; margin:5px 0; }
+button { padding:6px 12px; border:none; background:#007bff; color:#fff; border-radius:5px; cursor:pointer; margin-top:8px; }
+button:hover { background:#0056b3; }
+img { max-width:150px; border-radius:5px; }
+</style>
+</head>
+<body>
+<h2>Admin Dashboard - Orders</h2>
+<div id="orders"></div>
+
+<script>
+function renderOrders(){
+    const orders = JSON.parse(localStorage.getItem('orders'))||[];
+    const ordersDiv = document.getElementById('orders');
+    if(!orders.length){ ordersDiv.innerHTML='<p>No orders yet.</p>'; return; }
+
+    let html='';
+    orders.forEach(o=>{
+        html+=`<div class="card">
+            <div><strong>Order ID:</strong> ${o.id}</div>
+            <div><strong>Total:</strong> $${o.total.toFixed(2)}</div>
+            <div><strong>Payment:</strong> ${o.paymentMethod}</div>
+            <div><strong>Status:</strong> ${o.status}</div>
+            <div><strong>Items:</strong></div>`;
+        o.items.forEach(i=>{
+            html+=`<div style="margin-left:15px;">${i.title} × ${i.qty} ($${i.price})</div>`;
+        });
+        if(o.proofUrl) html+=`<div><strong>Proof:</strong><br><img src="${o.proofUrl}" alt="Proof"></div>`;
+        html+=`</div>`;
+    });
+    ordersDiv.innerHTML=html;
+}
+renderOrders();
+</script>
+</body>
+</html>

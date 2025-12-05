@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>More</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f6fa;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #2d3436;
+    }
+
+    .menu-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .menu-btn {
+        background: white;
+        padding: 18px;
+        border-radius: 14px;
+        border: 2px solid #dfe6e9;
+        font-size: 18px;
+        font-weight: bold;
+        color: #2d3436;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .menu-btn:hover {
+        transform: scale(1.03);
+        border-color: #0984e3;
+    }
+
+    .arrow {
+        font-size: 20px;
+        color: #636e72;
+    }
+</style>
+</head>
+<body>
+
+<h2>More Options</h2>
+
+<div class="menu-container">
+
+    <a class="menu-btn" href="https://wa.me/67074999806" target="_blank">
+        Contact Us (WhatsApp Admin)
+        <span class="arrow">›</span>
+    </a>
+
+    <div class="menu-btn" onclick="alert('Testimony page not yet created')">
+        Testimony
+        <span class="arrow">›</span>
+    </div>
+
+    <div class="menu-btn" onclick="window.location.href='rate.html'">
+        Rate Us
+        <span class="arrow">›</span>
+    </div>
+
+    <div class="menu-btn" onclick="alert('QnA page not yet created')">
+        QnA
+        <span class="arrow">›</span>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>My Products</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><h1>My Products (Sell)</h1></div>
+      <nav class="nav">
+        <a href="index.html">Items</a>
+        <a href="myproduct.html" class="active">My Products</a>
+        <a href="more.html">More</a>
+        <a href="account.html">Account</a>
+        <a href="checkout.html">Checkout</a>
+      </nav>
+    </header>
+
+    <main class="card" id="main">
+      <!-- injected -->
+    </main>
+    <footer class="footer card">Create and manage your digital products here.</footer>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    function requireLogin(){
+      const user = DL.currentUser();
+      if(!user){
+        document.getElementById('main').innerHTML = <p class="small">You must <a href="account.html">login</a> to manage your products.</p>;
+        return null;
+      }
+      return user;
+    }
+
+    function render(){
+      const user = requireLogin(); if(!user) return;
+      const all = DL.getProducts();
+      const mine = all.filter(p=>p.sellerId===user.id);
+      const html = `
+        <h2>Hello, ${user.name}</h2>
+        <section style="margin-top:12px">
+          <h3>Add New Product</h3>
+          <div class="form-row">
+            <input id="p-title" class="input" placeholder="Title">
+            <input id="p-price" class="input" placeholder="Price in USD (e.g. 9.99)">
+          </div>
+          <div style="margin-top:8px">
+            <input id="p-image" class="input" placeholder="Image URL (optional)">
+            <textarea id="p-desc" class="input" placeholder="Short description" rows="3"></textarea>
+            <div style="margin-top:8px">
+              <button class="btn" onclick="addProduct()">Add Product</button>
+            </div>
+          </div>
+        </section>
+
+        <section style="margin-top:16px">
+          <h3>Your Products</h3>
+          <div id="my-list">${mine.length? mine.map(p=>`
+            <div class="product">
+              <img src="${p.image}" alt="">
+              <strong>${p.title}</strong>
+              <div class="small">${p.desc}</div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn" onclick="editProduct('${p.id}')">Edit</button>
+                <button class="btn ghost" onclick="deleteProduct('${p.id}')">Delete</button>
+              </div>
+            </div>
+          `).join('') : '<div class="small">No products yet.</div>'}</div>
+        </section>
+      `;
+      document.getElementById('main').innerHTML = html;
+    }
+
+    function addProduct(){
+      const user = DL.currentUser(); if(!user) { alert('Login required'); location.href='account.html'; return; }
+      const title = document.getElementById('p-title').value.trim();
+      const price = document.getElementById('p-price').value.trim();
+      const desc = document.getElementById('p-desc').value.trim();
+      const image = document.getElementById('p-image').value.trim();
+      if(!title || !price) return alert('Title and price are required');
+      DL.addProduct({title, price, desc, image, sellerId:user.id});
+      // SERVER: POST to /api/products.php?action=add
+      render();
+    }
+    function deleteProduct(id){
+      if(!confirm('Delete product?')) return;
+      DL.removeProduct(id);
+      // SERVER: POST /api/products.php?action=delete&id=...
+      render();
+    }
+    function editProduct(id){
+      const p = DL.getProducts().find(x=>x.id===id);
+      const newTitle = prompt('Title', p.title);
+      if(newTitle === null) return;
+      const newPrice = prompt('Price (USD)', p.price);
+      if(newPrice === null) return;
+      DL.updateProduct(id, { title: newTitle, price: Number(newPrice) });
+      // SERVER: POST /api/products.php?action=update&id=...
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
